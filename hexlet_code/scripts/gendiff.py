@@ -1,15 +1,37 @@
 import argparse
 import json
+import os
+
+
+def read_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"Ошибка: Файл '{file_path}' не найден.")
+        exit(1)
+    except json.JSONDecodeError:
+        print(f"Ошибка: Файл '{file_path}' не является корректным JSON.")
+        exit(1)
 
 
 def compare_files(file1, file2, format):
-    result = f"Comparing {file1} and {file2}"
+    file1_path = os.path.join(os.getcwd(), 'data', file1)
+    file2_path = os.path.join(os.getcwd(), 'data', file2)
+
+    data1 = read_file(file1_path)
+    data2 = read_file(file2_path)
+
+    print(f"Data from {file1_path}: {data1}")
+    print(f"Data from {file2_path}: {data2}")
+
+    result = f"Comparing {file1_path} and {file2_path}"
 
     if format == 'json':
         result_dict = {
             "status": "success",
-            "file1": file1,
-            "file2": file2,
+            "file1": file1_path,
+            "file2": file2_path,
             "comparison_result": result
         }
         print(json.dumps(result_dict, indent=2))
