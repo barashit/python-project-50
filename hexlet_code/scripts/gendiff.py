@@ -1,43 +1,6 @@
 import argparse
-import json
+from gendiff.generate_diff import generate_diff
 import os
-
-
-def read_file(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        print(f"Ошибка: Файл '{file_path}' не найден.")
-        exit(1)
-    except json.JSONDecodeError:
-        print(f"Ошибка: Файл '{file_path}' не является корректным JSON.")
-        exit(1)
-
-
-def compare_files(file1, file2, format):
-    file1_path = os.path.join(os.getcwd(), 'data', file1)
-    file2_path = os.path.join(os.getcwd(), 'data', file2)
-
-    data1 = read_file(file1_path)
-    data2 = read_file(file2_path)
-
-    print(f"Data from {file1_path}: {data1}")
-    print(f"Data from {file2_path}: {data2}")
-
-    result = f"Comparing {file1_path} and {file2_path}"
-
-    if format == 'json':
-        result_dict = {
-            "status": "success",
-            "file1": file1_path,
-            "file2": file2_path,
-            "comparison_result": result
-        }
-        print(json.dumps(result_dict, indent=2))
-    else:
-        print(result)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Compares two configuration files and shows a difference.')
@@ -54,7 +17,28 @@ def main():
 
     args = parser.parse_args()
 
-    compare_files(args.first_file, args.second_file, args.format)
+    # Печатаем относительные пути, которые мы получаем через аргументы
+    print(f"First file from args: {args.first_file}")
+    print(f"Second file from args: {args.second_file}")
+
+    # Формируем правильный путь, убираем лишнее "data"
+    file1_path = os.path.abspath(args.first_file)  # Используем путь как есть
+    file2_path = os.path.abspath(args.second_file)  # Используем путь как есть
+
+    # Печатаем окончательные пути, чтобы удостовериться, что они правильные
+    print(f"Absolute path for first file: {file1_path}")
+    print(f"Absolute path for second file: {file2_path}")
+
+    # Проверяем, что файлы существуют
+    if not os.path.exists(file1_path):
+        print(f"Error: {file1_path} not found!")
+    if not os.path.exists(file2_path):
+        print(f"Error: {file2_path} not found!")
+
+    # В случае, если пути правильные, продолжаем работу
+    diff = generate_diff(file1_path, file2_path)
+    
+    print(diff)
 
 if __name__ == '__main__':
     main()
