@@ -5,6 +5,12 @@
 [![hexlet-check](https://github.com/barashit/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/barashit/python-project-50/actions/workflows/hexlet-check.yml)
 
 
+[![Code Climate Maintainability Badge](<a href="https://codeclimate.com/github/barashit/python-project-50/test_coverage"><img src="https://api.codeclimate.com/v1/badges/b996bed1afa1cc203b55/test_coverage" /></a>)]
+
+
+![Code Climate coverage](<a href="https://codeclimate.com/github/barashit/python-project-50/test_coverage"><img src="https://api.codeclimate.com/v1/badges/b996bed1afa1cc203b55/test_coverage" /></a>)
+
+
 # Gendiff
 
 Gendiff — утилита для сравнения двух конфигурационных файлов и вывода различий между ними. Программа поддерживает работу с файлами в формате JSON.
