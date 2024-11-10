@@ -1,0 +1,42 @@
+name: CI
+
+# События, при которых будет запускаться процесс CI
+on:
+  push:
+    branches:
+      - main  # или другие ветки, например, 'dev'
+  pull_request:
+    branches:
+      - main  # или другие ветки, например, 'dev'
+
+jobs:
+  # Работа по сборке и тестированию
+  test:
+    runs-on: ubuntu-latest  # Будет использоваться Ubuntu
+
+    steps:
+      # Проверка кода
+      - name: Checkout code
+        uses: actions/checkout@v2  # Шаг для получения кода из репозитория
+
+      # Установка Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'  # Версия Python, используемая в проекте
+
+      # Установка зависимостей (в том числе pytest и flake8)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Устанавливает зависимости, если они есть в requirements.txt
+
+      # Запуск линтера (flake8)
+      - name: Run flake8
+        run: |
+          make lint  # если у вас настроена команда `make lint` для линтинга
+
+      # Запуск тестов (pytest)
+      - name: Run tests
+        run: |
+          python3 -m pytest tests  # Запуск тестов
