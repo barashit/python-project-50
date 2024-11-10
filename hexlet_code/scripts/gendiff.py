@@ -1,7 +1,7 @@
-import argparse
-from gendiff.generate_diff import generate_diff
-import os
+# hexlet_code/scripts/gendiff.py
 
+import argparse
+from hexlet_code.gendiff.generate_diff import generate_diff
 
 def main():
     parser = argparse.ArgumentParser(
@@ -27,29 +27,10 @@ def main():
 
     args = parser.parse_args()
 
-    # Печатаем относительные пути, которые мы получаем через аргументы
-    print(f"First file from args: {args.first_file}")
-    print(f"Second file from args: {args.second_file}")
-
-    # Формируем правильный путь, убираем лишнее "data"
-    file1_path = os.path.abspath(args.first_file)  # Используем путь как есть
-    file2_path = os.path.abspath(args.second_file)  # Используем путь как есть
-
-    # Печатаем окончательные пути, чтобы удостовериться, что они правильные
-    print(f"Absolute path for first file: {file1_path}")
-    print(f"Absolute path for second file: {file2_path}")
-
-    # Проверяем, что файлы существуют
-    if not os.path.exists(file1_path):
-        print(f"Error: {file1_path} not found!")
-    if not os.path.exists(file2_path):
-        print(f"Error: {file2_path} not found!")
-
-    # В случае, если пути правильные, продолжаем работу
-    diff = generate_diff(file1_path, file2_path)
+    diff = generate_diff(args.first_file, args.second_file)
 
     print(diff)
 
-
 if __name__ == '__main__':
     main()
+
