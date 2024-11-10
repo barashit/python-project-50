@@ -2,11 +2,21 @@ import argparse
 from gendiff.generate_diff import generate_diff
 import os
 
-def main():
-    parser = argparse.ArgumentParser(description='Compares two configuration files and shows a difference.')
 
-    parser.add_argument('first_file', help='the first configuration file to compare')
-    parser.add_argument('second_file', help='the second configuration file to compare')
+def main():
+    parser = argparse.ArgumentParser(
+        description='Compares two configuration files and shows a difference.'
+    )
+
+    parser.add_argument(
+        'first_file',
+        help='the first configuration file to compare'
+    )
+
+    parser.add_argument(
+        'second_file',
+        help='the second configuration file to compare'
+    )
 
     parser.add_argument(
         '-f', '--format',
@@ -37,9 +47,9 @@ def main():
 
     # В случае, если пути правильные, продолжаем работу
     diff = generate_diff(file1_path, file2_path)
-    
+
     print(diff)
+
 
 if __name__ == '__main__':
     main()
-

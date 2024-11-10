@@ -1,5 +1,6 @@
 import json
 
+
 def read_file(file_path):
     """Читает и парсит JSON файл."""
     try:
@@ -12,12 +13,13 @@ def read_file(file_path):
         print(f"Ошибка: Файл '{file_path}' не является корректным JSON.")
         exit(1)
 
+
 def generate_diff(file1, file2):
     """Генерирует дифф между двумя JSON-файлами."""
     # Чтение и парсинг данных из файлов
     data1 = read_file(file1)
     data2 = read_file(file2)
-    
+
     # Получение всех уникальных ключей из обоих файлов
     keys = sorted(set(data1.keys()).union(data2.keys()))
 
@@ -42,4 +44,3 @@ def generate_diff(file1, file2):
             diff_result.append(f"  + {key}: {value2}")
 
     return "\n".join(diff_result)
-
