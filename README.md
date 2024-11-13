@@ -36,6 +36,10 @@ pip install .
 
 [![asciicast](https://asciinema.org/a/688307.svg)](https://asciinema.org/a/688307)
 
+рекурсивное сравнение для .json и .yml файлов
+
+[![asciicast](https://asciinema.org/a/689516.svg)](https://asciinema.org/a/689516)
+
 ### Пример 1: Сравнение двух JSON файлов
 
 **data/file1.json**:

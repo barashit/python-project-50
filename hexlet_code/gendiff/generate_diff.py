@@ -1,9 +1,10 @@
 # hexlet_code/gendiff/generate_diff.py
 
 from hexlet_code.gendiff.parse import read_file
+from hexlet_code.gendiff.formatters.stylish import stylish  # Импортируем форматер stylish
 
-def generate_diff(file1, file2):
-    """Генерирует дифф между двумя JSON или YAML файлами."""
+def generate_diff(file1, file2, format_name='stylish'):
+    """Генерирует дифф между двумя JSON или YAML файлами и форматирует его согласно указанному формату."""
     # Чтение и парсинг данных из файлов
     data1 = read_file(file1)
     data2 = read_file(file2)
@@ -11,25 +12,25 @@ def generate_diff(file1, file2):
     # Получаем все уникальные ключи из обоих файлов
     keys = sorted(set(data1.keys()).union(data2.keys()))
 
-    diff_result = []
+    # Построение промежуточного представления диффа
+    diff_result = {}
 
     for key in keys:
         value1 = data1.get(key)
         value2 = data2.get(key)
 
         if value1 == value2:
-            # Если значения одинаковые, просто выводим ключ с его значением
-            diff_result.append(f"  {key}: {value1}")
+            diff_result[key] = (value1, value2)
         elif key in data1 and key not in data2:
-            # Если ключ есть в data1, но нет в data2, выводим его с минусом
-            diff_result.append(f"  - {key}: {value1}")
+            diff_result[key] = (value1, None)  # Удалено
         elif key not in data1 and key in data2:
-            # Если ключ есть в data2, но нет в data1, выводим его с плюсом
-            diff_result.append(f"  + {key}: {value2}")
+            diff_result[key] = (None, value2)  # Добавлено
         else:
-            # Если значения различаются, выводим их с минусом и плюсом
-            diff_result.append(f"  - {key}: {value1}")
-            diff_result.append(f"  + {key}: {value2}")
+            diff_result[key] = (value1, value2)  # Изменено
 
-    return "\n".join(diff_result)
+    # Если формат не указан, по умолчанию используем 'stylish'
+    if format_name == 'stylish':
+        return stylish(diff_result)
+    else:
+        raise ValueError(f"Unsupported format: {format_name}")
 
