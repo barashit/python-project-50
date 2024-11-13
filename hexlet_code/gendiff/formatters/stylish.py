@@ -1,42 +1,43 @@
 # hexlet_code/gendiff/formatters/stylish.py
 
-def stylish_diff(value1, value2, depth=0):
-    """Рекурсивно форматирует дифф между двумя значениями в формате 'stylish'."""
-    indent = ' ' * (depth * 4)  # Отступ для уровня вложенности
-    result = []
+def format_stylish(diff):
+    """Форматирует вывод в виде stylish текста."""
 
-    if isinstance(value1, dict) and isinstance(value2, dict):
-        # Если оба значения — словари, сравниваем их рекурсивно
-        result.append("{")
-        keys = sorted(set(value1.keys()).union(value2.keys()))  # Все уникальные ключи
-        for key in keys:
-            v1 = value1.get(key)
-            v2 = value2.get(key)
-            if v1 == v2:
-                result.append(f"{indent}    {key}: {v1}")
-            elif key not in value2:
-                result.append(f"{indent}  - {key}: {v1}")
-            elif key not in value1:
-                result.append(f"{indent}  + {key}: {v2}")
-            else:
-                result.append(f"{indent}  - {key}: {v1}")
-                result.append(f"{indent}  + {key}: {v2}")
-        result.append(f"{indent}}}")
-    elif value1 == value2:
-        # Если значения одинаковые, выводим их
-        result.append(f"{indent}  {value1}")
-    else:
-        # Если значения разные, выводим их с минусом и плюсом
-        result.append(f"{indent}  - {value1}")
-        result.append(f"{indent}  + {value2}")
+    def recurse(diff, level=0):
+        """Рекурсивно обрабатывает diff и добавляет отступы для вложенных объектов."""
+        result = []
+        indent = "  " * level  # Отступ для текущего уровня
+        for item in diff:
+            key = item['key']
+            value = item.get('value')
+            old_value = item.get('old_value')
+            status = item['status']
 
-    return result
+            # Обработка различных состояний изменений
+            if status == 'added':
+                result.append(f"{indent}+ {key}: {format_value(value)}")
+            elif status == 'removed':
+                result.append(f"{indent}- {key}: {format_value(value)}")
+            elif status == 'updated':
+                result.append(f"{indent}- {key}: {format_value(old_value)}")
+                result.append(f"{indent}+ {key}: {format_value(value)}")
+            elif status == 'unchanged':
+                result.append(f"{indent}  {key}: {format_value(value)}")
+            elif status == 'nested':
+                result.append(f"{indent}  {key}: {{")
+                result.extend(recurse(item['children'], level + 1))  # Рекурсивно вызываем для вложенных объектов
+                result.append(f"{indent}  }}")
 
-def stylish(diff_result):
-    """Форматирует и выводит весь дифф с учетом вложенных структур."""
-    result = ['{']
-    for key, (value1, value2) in diff_result.items():
-        result.extend(stylish_diff(value1, value2, depth=1))
-    result.append('}')
-    return "\n".join(result)
+        return result
+
+    def format_value(value):
+        """Форматирует значение в зависимости от типа."""
+        if isinstance(value, dict):  # Если значение - это вложенный словарь, то показываем вложенные элементы
+            return '{'  # Для словаря возвращаем открывающуюся фигурную скобку
+        elif isinstance(value, str):  # Если строка, то оборачиваем в кавычки
+            return f"'{value}'"
+        return str(value)  # Для других типов (например, int, bool) просто выводим строковое представление
+
+    # Возвращаем форматированный текст
+    return "\n".join(recurse(diff))  # Рекурсивно обрабатываем все изменения
 
