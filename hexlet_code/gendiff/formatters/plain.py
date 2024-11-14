@@ -1,5 +1,3 @@
-# hexlet_code/gendiff/formatters/plain.py
-
 def format_plain(diff):
     """Форматирует вывод в виде plain текста."""
 
@@ -12,7 +10,6 @@ def format_plain(diff):
             old_value = item.get('old_value')
             status = item['status']
 
-            # Формируем ключ с учетом вложенности
             full_key = f"{parent_key}.{key}" if parent_key else key
 
             if status == 'added':
@@ -22,9 +19,9 @@ def format_plain(diff):
             elif status == 'updated':
                 result.append(f"Property '{full_key}' was updated. From {format_value(old_value)} to {format_value(value)}")
             elif status == 'unchanged':
-                continue  # Если не изменено, пропускаем
+                continue
             elif status == 'nested':
-                result.extend(recurse(item['children'], full_key))  # Рекурсивно вызываем для вложенных объектов
+                result.extend(recurse(item['children'], full_key))
 
         return result
 
@@ -32,10 +29,9 @@ def format_plain(diff):
         """Форматирует значение в зависимости от типа."""
         if isinstance(value, dict):
             return '[complex value]'
-        elif isinstance(value, str):  # Если строка, то оборачиваем в кавычки
+        elif isinstance(value, str):
             return f"'{value}'"
-        return str(value)  # Для других типов (например, int, bool) просто выводим строковое представление
+        return str(value)
 
-    # Возвращаем форматированный текст
-    return "\n".join(recurse(diff))  # Рекурсивно обрабатываем все изменения
+    return "\n".join(recurse(diff))
 

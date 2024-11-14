@@ -44,6 +44,10 @@ pip install .
 
 [![asciicast](https://asciinema.org/a/689529.svg)](https://asciinema.org/a/689529)
 
+вывод диффа в формате json
+
+[![asciicast](https://asciinema.org/a/689677.svg)](https://asciinema.org/a/689677)
+
 ### Пример 1: Сравнение двух JSON файлов
 
 **data/file1.json**:

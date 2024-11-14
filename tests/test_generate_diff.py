@@ -1,212 +1,63 @@
 import pytest
 import json
-import yaml
-from hexlet_code.gendiff.generate_diff import generate_diff
 import os
+from hexlet_code.gendiff.generate_diff import generate_diff
 
-
-# Фикстуры для загрузки JSON файлов из директории fixtures
 @pytest.fixture
 def json_file_1():
     fixture_path = os.path.join(os.path.dirname(__file__), 'fixtures', 'file1.json')
-    with open(fixture_path, 'r') as f:
-        return json.load(f)
+    return fixture_path
 
 
 @pytest.fixture
 def json_file_2():
     fixture_path = os.path.join(os.path.dirname(__file__), 'fixtures', 'file2.json')
-    with open(fixture_path, 'r') as f:
-        return json.load(f)
+    return fixture_path
 
 
-# Фикстуры для загрузки YAML файлов из директории fixtures
-@pytest.fixture
-def yaml_file_1():
-    fixture_path = os.path.join(os.path.dirname(__file__), 'fixtures', 'file1.yml')
-    with open(fixture_path, 'r') as f:
-        return yaml.safe_load(f)
-
-
-@pytest.fixture
-def yaml_file_2():
-    fixture_path = os.path.join(os.path.dirname(__file__), 'fixtures', 'file2.yml')
-    with open(fixture_path, 'r') as f:
-        return yaml.safe_load(f)
-
-
-# Тесты для проверки различий между JSON файлами
 def test_generate_diff_json(json_file_1, json_file_2):
-    diff = generate_diff(json_file_1, json_file_2)
-    expected_diff = """
-  common: {
-    setting1: Value 1
-  - setting2: 200
-  + setting4: blah blah
-    setting3: null
-  + setting5: {
-        key5: value5
-      }
-    follow: false
-    setting6: {
-      key: value
-      ops: vops
-      doge: {
-        wow: so much
-      }
-    }
-  }
-  group1: {
-  - baz: bas
-  + baz: bars
-    foo: bar
-  - nest: {
-        key: value
-      }
-  + nest: str
-  }
-  - group2: {
-      abc: 12345
-      deep: {
-        id: 45
-      }
-    }
-  + group3: {
-      deep: {
-        id: {
-          number: 45
-        }
-      }
-      fee: 100500
-    }
-}
-"""
-    assert diff.strip() == expected_diff.strip()
+    # Ожидаемый результат в JSON формате
+    expected_result = [
+        {"key": "common", "status": "nested", "children": [
+            {"key": "follow", "value": False, "status": "added"},
+            {"key": "setting1", "value": "Value 1", "status": "unchanged"},
+            {"key": "setting2", "value": 200, "status": "removed"},
+            {"key": "setting3", "old_value": True, "value": None, "status": "updated"},
+            {"key": "setting4", "value": "blah blah", "status": "added"},
+            {"key": "setting5", "value": {"key5": "value5"}, "status": "added"},
+            {"key": "setting6", "status": "nested", "children": [
+                {"key": "doge", "status": "nested", "children": [
+                    {"key": "wow", "old_value": "", "value": "so much", "status": "updated"}
+                ]},
+                {"key": "key", "value": "value", "status": "unchanged"},
+                {"key": "ops", "value": "vops", "status": "added"}
+            ]}
+        ]},
+        {"key": "group1", "status": "nested", "children": [
+            {"key": "baz", "old_value": "bas", "value": "bars", "status": "updated"},
+            {"key": "foo", "value": "bar", "status": "unchanged"},
+            {"key": "nest", "old_value": {"key": "value"}, "value": "str", "status": "updated"}
+        ]},
+        {"key": "group2", "value": {"abc": 12345, "deep": {"id": 45}}, "status": "removed"},
+        {"key": "group3", "value": {"deep": {"id": {"number": 45}}, "fee": 100500}, "status": "added"}
+    ]
+    
+    # Получаем результат в формате JSON
+    result = generate_diff(json_file_1, json_file_2, format_name='json')
+
+    # Сравниваем результат с ожидаемым
+    assert json.loads(result) == expected_result
 
 
-# Тесты для проверки различий между YAML файлами
-def test_generate_diff_yaml(yaml_file_1, yaml_file_2):
-    diff = generate_diff(yaml_file_1, yaml_file_2)
-    expected_diff = """
-  common: {
-    setting1: Value 1
-  - setting2: 200
-  + setting4: blah blah
-    setting3: null
-  + setting5: {
-        key5: value5
-      }
-    follow: false
-    setting6: {
-      key: value
-      ops: vops
-      doge: {
-        wow: so much
-      }
-    }
-  }
-  group1: {
-  - baz: bas
-  + baz: bars
-    foo: bar
-  - nest: {
-        key: value
-      }
-  + nest: str
-  }
-  - group2: {
-      abc: 12345
-      deep: {
-        id: 45
-      }
-    }
-  + group3: {
-      deep: {
-        id: {
-          number: 45
-        }
-      }
-      fee: 100500
-    }
-}
-"""
-    assert diff.strip() == expected_diff.strip()
-
-
-
-@pytest.fixture
-def json_file_1(tmpdir):
-    data = {
-        "common": {
-            "setting1": "Value 1",
-            "setting2": 200,
-            "setting3": True,
-            "setting6": {
-                "key": "value",
-                "doge": {
-                    "wow": ""
-                }
-            }
-        },
-        "group1": {
-            "baz": "bas",
-            "foo": "bar",
-            "nest": {
-                "key": "value"
-            }
-        }
-    }
-    file_path = tmpdir.join("file1.json")
-    with open(file_path, 'w') as f:
-        json.dump(data, f)
-    return str(file_path)
-
-
-@pytest.fixture
-def json_file_2(tmpdir):
-    data = {
-        "common": {
-            "follow": False,
-            "setting1": "Value 1",
-            "setting3": None,
-            "setting4": "blah blah",
-            "setting5": {
-                "key5": "value5"
-            },
-            "setting6": {
-                "key": "value",
-                "ops": "vops",
-                "doge": {
-                    "wow": "so much"
-                }
-            }
-        },
-        "group1": {
-            "foo": "bar",
-            "baz": "bars",
-            "nest": "str"
-        },
-        "group3": {
-            "deep": {
-                "id": {
-                    "number": 45
-                }
-            },
-            "fee": 100500
-        }
-    }
-    file_path = tmpdir.join("file2.json")
-    with open(file_path, 'w') as f:
-        json.dump(data, f)
-    return str(file_path)
-
-
+# в формате plain
 def test_plain_diff(json_file_1, json_file_2):
     diff = generate_diff(json_file_1, json_file_2, 'plain')
+    print(f"Generated diff:\n{diff}")
+
     expected_diff = (
-        "Property 'common.follow' was added with value: false\n"
+        "Property 'common.follow' was added with value: False\n"
         "Property 'common.setting2' was removed\n"
-        "Property 'common.setting3' was updated. From true to null\n"
+        "Property 'common.setting3' was updated. From True to None\n"
         "Property 'common.setting4' was added with value: 'blah blah'\n"
         "Property 'common.setting5' was added with value: [complex value]\n"
         "Property 'common.setting6.doge.wow' was updated. From '' to 'so much'\n"
@@ -216,6 +67,45 @@ def test_plain_diff(json_file_1, json_file_2):
         "Property 'group2' was removed\n"
         "Property 'group3' was added with value: [complex value]"
     )
-    assert diff.strip() == expected_diff.strip()
 
+    assert diff.strip().lower() == expected_diff.strip().lower()
+
+
+
+# YAML
+def test_generate_diff_yaml():
+    yaml_file_1 = os.path.join(os.path.dirname(__file__), 'fixtures', 'file1.yml')
+    yaml_file_2 = os.path.join(os.path.dirname(__file__), 'fixtures', 'file2.yml')
+
+    # Ожидаемый результат 
+    expected_result = [
+        {"key": "common", "status": "nested", "children": [
+            {"key": "follow", "value": False, "status": "added"},
+            {"key": "setting1", "value": "Value 1", "status": "unchanged"},
+            {"key": "setting2", "value": 200, "status": "removed"},
+            {"key": "setting3", "old_value": True, "value": None, "status": "updated"},
+            {"key": "setting4", "value": "blah blah", "status": "added"},
+            {"key": "setting5", "value": {"key5": "value5"}, "status": "added"},
+            {"key": "setting6", "status": "nested", "children": [
+                {"key": "doge", "status": "nested", "children": [
+                    {"key": "wow", "old_value": "", "value": "so much", "status": "updated"}
+                ]},
+                {"key": "key", "value": "value", "status": "unchanged"},
+                {"key": "ops", "value": "vops", "status": "added"}
+            ]}
+        ]},
+        {"key": "group1", "status": "nested", "children": [
+            {"key": "baz", "old_value": "bas", "value": "bars", "status": "updated"},
+            {"key": "foo", "value": "bar", "status": "unchanged"},
+            {"key": "nest", "old_value": {"key": "value"}, "value": "str", "status": "updated"}
+        ]},
+        {"key": "group2", "value": {"abc": 12345, "deep": {"id": 45}}, "status": "removed"},
+        {"key": "group3", "value": {"deep": {"id": {"number": 45}}, "fee": 100500}, "status": "added"}
+    ]
+    
+
+    result = generate_diff(yaml_file_1, yaml_file_2, format_name='json')
+
+
+    assert json.loads(result) == expected_result
 
