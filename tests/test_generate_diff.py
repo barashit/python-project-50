@@ -1,6 +1,7 @@
 import pytest
 import json
 import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'hexlet_code')))
 from hexlet_code.gendiff.generate_diff import generate_diff
 
 @pytest.fixture
