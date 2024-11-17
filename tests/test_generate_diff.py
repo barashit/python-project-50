@@ -74,7 +74,6 @@ def test_plain_diff(json_file_1, json_file_2):
     assert diff.strip().lower() == expected_diff.strip().lower()
 
 
-
 # YAML
 def test_generate_diff_yaml():
     yaml_file_1 = os.path.join(os.path.dirname(__file__), 'fixtures', 'file1.yml')
