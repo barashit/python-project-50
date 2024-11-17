@@ -1,42 +1,39 @@
 name: CI
 
-# События, при которых будет запускаться процесс CI
 on:
   push:
     branches:
-      - main  # или другие ветки, например, 'dev'
+      - main
   pull_request:
     branches:
-      - main  # или другие ветки, например, 'dev'
+      - main
 
 jobs:
-  # Работа по сборке и тестированию
   test:
-    runs-on: ubuntu-latest  # Будет использоваться Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
-      # Проверка кода
-      - name: Checkout code
-        uses: actions/checkout@v2  # Шаг для получения кода из репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      # Установка Python
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'  # Версия Python, используемая в проекте
+          python-version: '3.10'  # Убедитесь, что используете правильную версию Python
 
-      # Установка зависимостей (в том числе pytest и flake8)
-      - name: Install dependencies
+      - name: Install poetry
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Устанавливает зависимости, если они есть в requirements.txt
+          pip install poetry
 
-      # Запуск линтера (flake8)
-      - name: Run flake8
+      - name: Install dependencies with poetry
         run: |
-          make lint  # если у вас настроена команда `make lint` для линтинга
+          poetry install --no-dev
 
-      # Запуск тестов (pytest)
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)/hexlet_code" >> $GITHUB_ENV  # Устанавливаем PYTHONPATH
+
       - name: Run tests
         run: |
-          python3 -m pytest tests  # Запуск тестов
+          poetry run pytest -vv --exitfirst
+
