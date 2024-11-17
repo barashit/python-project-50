@@ -8,6 +8,7 @@ readme = "README.md"
 
 packages = [
     { include = "hexlet_code/scripts" },
+    { include = "hexlet_code/gendiff" }
 ]
 
 [tool.poetry.dependencies]
@@ -23,4 +24,3 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 gendiff = "hexlet_code.scripts.gendiff:main"
-
