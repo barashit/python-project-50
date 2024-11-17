@@ -46,7 +46,7 @@ pip install .
 
 вывод диффа в формате json
 
-[![asciicast](https://asciinema.org/a/689677.svg)](https://asciinema.org/a/689677)
+<a href="https://asciinema.org/a/689677" target="_blank"><img src="https://asciinema.org/a/689677.svg" /></a>
 
 ### Пример 1: Сравнение двух JSON файлов
 
