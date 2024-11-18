@@ -34,6 +34,8 @@ def format_stylish(diff):
             return '{'
         elif isinstance(value, str):
             return f"'{value}'"
+        elif isinstance(value, bool):
+            return 'true' if value else 'false'
         return str(value)
 
 
