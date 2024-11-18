@@ -19,11 +19,26 @@ def read_file(file_path):
 
 def read_json_file(file_path):
     """Читает и парсит JSON файл."""
-    with open(file_path, 'r') as file:
-        return json.load(file) 
-
+    try:
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Error parsing JSON file {file_path}: {e}")
+    except FileNotFoundError:
+        raise ValueError(f"File {file_path} not found.")
+    except Exception as e:
+        raise ValueError(f"An error occurred while reading the file {file_path}: {e}")
+        
 
 def read_yaml_file(file_path):
     """Читает и парсит YAML файл."""
-    with open(file_path, 'r') as file:
-        return yaml.safe_load(file)
+    try:
+        with open(file_path, 'r') as file:
+            return yaml.safe_load(file)
+    except yaml.YAMLError as e:
+        raise ValueError(f"Error parsing YAML file {file_path}: {e}")
+    except FileNotFoundError:
+        raise ValueError(f"File {file_path} not found.")
+    except Exception as e:
+        raise ValueError(f"An error occurred while reading the file {file_path}: {e}")
+
