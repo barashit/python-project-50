@@ -18,10 +18,10 @@ pyyaml = "^6.0.2"
 [tool.poetry.dev-dependencies]
 pytest = "^6.0"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 gendiff = "scripts.gendiff:main"
+
