@@ -77,7 +77,6 @@ def format_value(value):
     if value is None:
         return 'null'
     elif isinstance(value, str):
-        # Если строка содержит пробелы или специальные символы, добавляем кавычки
         if ' ' in value or value in ['null', 'true', 'false']:
             return f'"{value}"'
         return value
