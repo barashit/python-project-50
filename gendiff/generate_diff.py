@@ -77,9 +77,7 @@ def format_value(value):
     if value is None:
         return 'null'
     elif isinstance(value, str):
-        if ' ' in value or value in ['null', 'true', 'false']:
-            return f'"{value}"'
-        return value
+        return f'"{value}"'  
     return value
 
 
