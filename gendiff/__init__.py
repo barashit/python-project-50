@@ -1,1 +1,1 @@
-__all__ = ['generate_diff', 'arg_parser', 'parse']
+from .generate_diff import generate_diff
