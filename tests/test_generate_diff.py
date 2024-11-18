@@ -4,7 +4,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'hexlet_code')))
 print(sys.path)  
-from hexlet_code.gendiff.generate_diff import generate_diff
+from gendiff.generate_diff import generate_diff
 
 @pytest.fixture
 def json_file_1():
