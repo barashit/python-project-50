@@ -1,5 +1,5 @@
 from gendiff.parse import read_file
-from gendiff.formatters import format_stylish, format_plain, format_json
+from gendiff.formatters import stylish, plain, json
 
 def generate_diff(file1, file2, format_name='stylish'):
     """Генерирует дифф между двумя JSON или YAML файлами."""
