@@ -112,4 +112,3 @@ def normalize_result(result: str):
     normalized_result = re.sub(r"'", '"', normalized_result)  # Преобразуем одинарные кавычки в двойные
     normalized_result = re.sub(r"\bnull\b", "null", normalized_result)  # Заменяем 'null' (строка) на null
     return normalized_result
-
