@@ -1,5 +1,5 @@
-import argparse
-from gendiff.arg_parser import arg_parser
+
+from gendiff.arg_parser import parse_args
 from gendiff.generate_diff import generate_diff
 
 
