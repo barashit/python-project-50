@@ -35,7 +35,7 @@ def format_stylish(diff):
         elif isinstance(value, str):
             return f"'{value}'"
         elif isinstance(value, bool):
-            return 'true' if value else 'false'
+            return value
         return str(value)
 
 
