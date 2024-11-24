@@ -75,10 +75,10 @@ def test_generate_diff(format):
             },
         ]
 
-        c1 = Child("follow", "", False, "added", [])
+        c1 = Child("follow", "", false, "added", [])
         c2 = Child("setting1", "", "Value 1", "unchanged", [])
         c3 = Child("setting2", "", 200, "removed", [])
-        c4 = Child("setting3", True, "null", "updated", [])
+        c4 = Child("setting3", true, "null", "updated", [])
         c5 = Child("setting4", "", "blah blah", "added", [])
         c6 = Child("setting5", "", {"key5": "value5"}, "added", [])
         c7 = Child("setting6", "", "", "nested", setting6_children)
@@ -200,7 +200,7 @@ def test_generate_diff(format):
         # Нормализуем результат и ожидаемый вывод
         def normalize(s: str) -> str:
             s = s.strip().lower().replace("'", "")
-            s = s.replace("true", "true").replace("null", "null")
+            s = s.replace("True", "true").replace('"null"', 'null')
             return s
         result_normalized = normalize(result)
         expected_diff_normalized = normalize(expected_diff)
