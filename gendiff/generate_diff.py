@@ -1,10 +1,10 @@
 from gendiff.parse import read_file
 from gendiff.formatters import format_stylish, format_plain, format_json
 import json
+import yaml
 import re
 
 def generate_diff(file1, file2, format_name='stylish'):
-    """Генерирует дифф между двумя JSON или YAML файлами."""
     
     data1 = read_file(file1)
     data2 = read_file(file2)
@@ -42,11 +42,10 @@ def generate_diff(file1, file2, format_name='stylish'):
     elif format_name == 'json':
         return format_json(diff_result)  # json
     else:
-        raise ValueError(f"Unknown format: {format_name}")  # Если формат неизвестен
+        raise ValueError(f"Unknown format: {format_name}")
 
 def generate_diff_recursive(data1, data2, format_name):
-    """Рекурсивно генерирует дифф для вложенных словарей."""
-    keys = sorted(set(data1.keys()).union(data2.keys()))  # Получаем все уникальные ключи
+    keys = sorted(set(data1.keys()).union(data2.keys()))
     diff_result = []
 
     for key in keys:
