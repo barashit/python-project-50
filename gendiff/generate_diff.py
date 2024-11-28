@@ -74,20 +74,14 @@ def generate_diff_recursive(data1, data2, format_name):
     return diff_result
 
 def format_value(value, format_name):
-    if value == 'null':
-        value = None
-
     if value is None:
-        return 'null' if format_name in ['json', 'stylish'] else 'null'
-    
+        return 'null'
     elif isinstance(value, bool):
-        if format_name == 'plain':
-            return 'true' if value else 'false'
-        return value
-    
+        return 'true' if value else 'false'
     elif isinstance(value, str):
+        if format_name == 'json':
+            return f'"{value}"'
         return value
-
     return value
 
 
